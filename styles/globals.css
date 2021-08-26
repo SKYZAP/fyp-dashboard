@@ -42,11 +42,10 @@ a {
   margin: auto;
   padding-top: 2%;
   top: 0;
-  right: 0;
+  left: -1.2%;
   width: 100%;
 }
 
 .nav-button {
   margin-left: 2%;
-  position: relative;
 }
