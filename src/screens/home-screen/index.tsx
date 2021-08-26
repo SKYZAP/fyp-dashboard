@@ -62,8 +62,7 @@ const HomeScreen = () => {
               </h3>
               <Button
                 icon={<DownOutlined />}
-                style={{ position: "absolute", bottom: 25 }}
-                shape="circle"
+                style={{ position: "absolute", bottom: 25, width: "5%" }}
                 size="large"
                 onClick={() => fullpageApi.moveSectionDown()}
               ></Button>
