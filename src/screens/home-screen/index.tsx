@@ -62,10 +62,18 @@ const HomeScreen = () => {
               </h3>
               <Button
                 icon={<DownOutlined />}
-                style={{ position: "absolute", bottom: 25, width: "5%" }}
+                style={{
+                  position: "absolute",
+                  bottom: 25,
+                  fontWeight: "bold",
+                  width: "10%",
+                  left: "45.5%",
+                }}
                 size="large"
                 onClick={() => fullpageApi.moveSectionDown()}
-              ></Button>
+              >
+                Learn More
+              </Button>
             </div>
             <div
               className="section"
