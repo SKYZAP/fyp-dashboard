@@ -14,3 +14,39 @@ a {
 * {
   box-sizing: border-box;
 }
+
+/* FULLPAGE CSS + ANIMATIONS STYLING */
+.fp-viewing-3 #fp-nav ul li a span {
+  background: white;
+}
+
+.fp-viewing-2 #fp-nav ul li a span {
+  background: white;
+}
+
+.fp-viewing-1 #fp-nav ul li a span {
+  background: white;
+}
+
+.fp-viewing-0 #fp-nav ul li a span {
+  background: white;
+}
+
+.imHome {
+  border-radius: 20px;
+}
+
+/* NAVIGATION STYLING */
+.nav-menu {
+  position: absolute;
+  margin: auto;
+  padding-top: 2%;
+  top: 0;
+  right: 0;
+  width: 100%;
+}
+
+.nav-button {
+  margin-left: 2%;
+  position: relative;
+}
