@@ -2,9 +2,11 @@ import ReactFullpage from "@fullpage/react-fullpage";
 import { CSSProperties } from "react";
 import Image from "next/image";
 import jetpic from "../../../public/jethome1.jpg";
-import { Button } from "antd";
+import { Button, Input } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 require("antd/dist/antd.less");
+
+const { Search } = Input;
 
 const HomeScreen = () => {
   const defaultStyle: CSSProperties = {
@@ -18,17 +20,13 @@ const HomeScreen = () => {
       //fullpage options
       licenseKey={"YOUR_KEY_HERE"}
       scrollingSpeed={1000} /* Options here */
-      sectionsColor={["#342e37", "#9fd356", "#342e37", "#9fd356"]}
+      sectionsColor={["#342e37", "#9fd356", "#342e37"]}
       navigation={true}
-      navigationTooltips={[
-        "firstSlide",
-        "secondSlide",
-        "thirdSlide",
-        "fourthSlide",
-      ]}
+      navigationTooltips={["firstSlide", "secondSlide", "thirdSlide"]}
       render={({ fullpageApi }: { fullpageApi: any }) => {
         return (
           <ReactFullpage.Wrapper>
+            <title>Home</title>
             <div
               className="section"
               style={{ ...defaultStyle, color: "#fcfafc" }}
@@ -93,16 +91,27 @@ const HomeScreen = () => {
                 Click me to move down
               </Button>
             </div>
-            <div
-              className="section"
-              style={{ ...defaultStyle, color: "#fcfafc" }}
-            >
-              <h3>Section 2</h3>
-            </div>
             <div className="section" style={{ ...defaultStyle }}>
-              <h3 style={{ color: "#fcfafc", fontSize: "100px" }}>
-                Get Started
-              </h3>
+              <div
+                style={{
+                  backgroundColor: "white",
+                  width: "38%",
+                  margin: "auto",
+                  borderRadius: "20px",
+                }}
+              >
+                <h3>Get Started</h3>
+                <Search
+                  placeholder="Input Jetracer IP"
+                  allowClear
+                  enterButton="Connect"
+                  size="large"
+                  style={{ width: "35%" }}
+                  onSearch={(value) => {
+                    alert(`${value}`);
+                  }}
+                />
+              </div>
             </div>
           </ReactFullpage.Wrapper>
         );
