@@ -4,11 +4,13 @@ import Image from "next/image";
 import jetpic from "../../../public/jethome1.jpg";
 import { Button, Input } from "antd";
 import { DownOutlined } from "@ant-design/icons";
+import { useRouter } from "next/router";
 require("antd/dist/antd.less");
 
 const { Search } = Input;
 
 const HomeScreen = () => {
+  const router = useRouter();
   const defaultStyle: CSSProperties = {
     fontFamily: "Arial",
     fontSize: "50px",
@@ -34,9 +36,9 @@ const HomeScreen = () => {
               <div className="nav-menu">
                 <Button
                   style={{
-                    borderRadius: "20px",
+                    borderRadius: "20em",
                     fontWeight: "bold",
-                    width: "10%",
+                    width: "10em",
                   }}
                   className="nav-button"
                   size="large"
@@ -45,9 +47,9 @@ const HomeScreen = () => {
                 </Button>
                 <Button
                   style={{
-                    borderRadius: "20px",
+                    borderRadius: "20em",
                     fontWeight: "bold",
-                    width: "10%",
+                    width: "10em",
                   }}
                   className="nav-button"
                   size="large"
@@ -55,23 +57,24 @@ const HomeScreen = () => {
                   More Info
                 </Button>
               </div>
-              <h3 style={{ color: "#fcfafc", fontSize: "70px" }}>
+              <h3 style={{ color: "#fcfafc", fontSize: "1.2em" }}>
                 JetRacer Serverless Compute Dashboard
               </h3>
-              <Button
-                icon={<DownOutlined />}
-                style={{
-                  position: "absolute",
-                  bottom: 25,
-                  fontWeight: "bold",
-                  width: "10%",
-                  left: "45.5%",
-                }}
-                size="large"
-                onClick={() => fullpageApi.moveSectionDown()}
-              >
-                Learn More
-              </Button>
+              <div className="fullRow" style={{ width: "100%" }}>
+                <Button
+                  icon={<DownOutlined />}
+                  style={{
+                    margin: "auto",
+                    fontWeight: "bold",
+                    borderRadius: "2em",
+                    width: "10em",
+                  }}
+                  size="large"
+                  onClick={() => fullpageApi.moveSectionDown()}
+                >
+                  Learn More
+                </Button>
+              </div>
             </div>
             <div
               className="section"
@@ -107,8 +110,8 @@ const HomeScreen = () => {
                   enterButton="Connect"
                   size="large"
                   style={{ width: "35%" }}
-                  onSearch={(value) => {
-                    alert(`${value}`);
+                  onSearch={() => {
+                    router.push("/dashboard");
                   }}
                 />
               </div>
