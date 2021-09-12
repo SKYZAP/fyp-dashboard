@@ -13,7 +13,7 @@ const HomeScreen = () => {
   const router = useRouter();
   const defaultStyle: CSSProperties = {
     fontFamily: "Arial",
-    fontSize: "50px",
+    fontSize: "5em",
     textAlign: "center",
   };
 
@@ -57,7 +57,7 @@ const HomeScreen = () => {
                   More Info
                 </Button>
               </div>
-              <h3 style={{ color: "#fcfafc", fontSize: "1.2em" }}>
+              <h3 style={{ color: "#fcfafc", fontSize: "1em" }}>
                 JetRacer Serverless Compute Dashboard
               </h3>
               <div className="fullRow" style={{ width: "100%" }}>
@@ -98,9 +98,9 @@ const HomeScreen = () => {
               <div
                 style={{
                   backgroundColor: "white",
-                  width: "38%",
+                  width: "80vw",
                   margin: "auto",
-                  borderRadius: "20px",
+                  borderRadius: "1em",
                 }}
               >
                 <h3>Get Started</h3>
@@ -109,7 +109,7 @@ const HomeScreen = () => {
                   allowClear
                   enterButton="Connect"
                   size="large"
-                  style={{ width: "35%" }}
+                  style={{ padding: "0.2em", textAlign: "center" }}
                   onSearch={() => {
                     router.push("/dashboard");
                   }}
