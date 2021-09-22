@@ -110,7 +110,10 @@ const HomeScreen = () => {
                   enterButton="Connect"
                   size="large"
                   style={{ padding: "0.2em", textAlign: "center" }}
-                  onSearch={() => {
+                  onSearch={async (text) => {
+                    const res = await fetch(
+                      `/api/getJetracer?type=CREATE&ip=${text}&mac=EEEFFF`,
+                    );
                     router.push("/dashboard");
                   }}
                 />
