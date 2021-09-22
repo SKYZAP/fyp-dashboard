@@ -9,6 +9,9 @@ const dbConn = () => {
     port: process.env.DB_PORT,
     debug: true,
     delayMs: 3000,
+    maxConnections: 10,
+    connUtilization: 0.8,
+    minConnectionIdleTimeSec: 0.5,
     ssl: { rejectUnauthorized: false },
   });
   return client;
