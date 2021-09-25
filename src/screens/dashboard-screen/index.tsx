@@ -12,9 +12,9 @@ const ContentRender = (key) => {
     setTimeout(async () => {
       const res = await fetch(`/api/getJetracer?type=GETLATEST`);
       const data = await res.json();
-      const result = `http://${data.ipAddress}:5000/video_feed`;
-      setLoading(false);
+      const result = `https://${data.ipAddress}:5000/video_feed`;
       setResult(result);
+      setLoading(false);
     }, 2000);
   };
   getData();
