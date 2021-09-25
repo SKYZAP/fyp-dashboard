@@ -8,16 +8,14 @@ const ContentRender = (key) => {
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState("");
 
-  const getData = () => {
-    setTimeout(async () => {
-      const res = await fetch(`/api/getJetracer?type=GETLATEST`);
-      const data = await res.json();
-      const result = `https://${data.ipAddress}:5000/video_feed`;
-      setResult(result);
-      setLoading(false);
-    }, 2000);
-  };
-  getData();
+  setTimeout(async () => {
+    const res = await fetch(`/api/getJetracer?type=GETLATEST`);
+    const data = await res.json();
+    const result = `https://${data.ipAddress}:5000/video_feed`;
+    setResult(result);
+    setLoading(false);
+  }, 2000);
+
   if (key == "LivePreview") {
     return (
       <div className="site-layout-content" style={{ display: "flex" }}>
