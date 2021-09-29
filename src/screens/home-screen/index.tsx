@@ -24,7 +24,7 @@ const HomeScreen = () => {
       scrollingSpeed={1000} /* Options here */
       sectionsColor={["#342e37", "#9fd356", "#342e37"]}
       navigation={true}
-      navigationTooltips={["firstSlide", "secondSlide", "thirdSlide"]}
+      navigationTooltips={["Intro", "Info", "Start"]}
       render={({ fullpageApi }: { fullpageApi: any }) => {
         return (
           <ReactFullpage.Wrapper>
