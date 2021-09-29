@@ -16,15 +16,16 @@ a {
 }
 
 /* FULLPAGE CSS + ANIMATIONS STYLING */
+
+.fp-viewing-3 #fp-nav ul li a span {
+  background: white;
+}
+
 .fp-viewing-2 #fp-nav ul li a span {
   background: white;
 }
 
 .fp-viewing-1 #fp-nav ul li a span {
-  background: white;
-}
-
-.fp-viewing-0 #fp-nav ul li a span {
   background: white;
 }
 
