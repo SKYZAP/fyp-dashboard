@@ -1,10 +1,12 @@
 import { Layout, Menu, Breadcrumb, Image, Skeleton, Table, Button } from "antd";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MessageList } from "react-chat-elements";
 require("antd/dist/antd.less");
 require("react-chat-elements/dist/main.css");
 
 const { Header, Content, Footer } = Layout;
+
+const isBrowser = typeof window !== "undefined";
 
 const msg = {
   position: "right",
@@ -66,13 +68,47 @@ const columns = [
 const ContentRender = (key) => {
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState("");
+  const [wsInstance, setWsInstance] = useState(() =>
+    isBrowser ? new WebSocket(`ws://192.168.1.107:5555/`) : null,
+  );
+  const [wsData, setWsData] = useState([
+    {
+      position: "right",
+      type: "text",
+      text: `EEE`,
+      date: new Date(),
+    },
+  ]);
+
+  useEffect(() => {
+    const ws = new WebSocket("ws://192.168.1.107:5555/");
+    setWsInstance(ws);
+    wsInstance.onopen = () => {
+      console.log("Connection created");
+    };
+    wsInstance.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setWsData((wsData) => [
+        ...wsData,
+        {
+          position: "right",
+          type: "text",
+          text: `${JSON.parse(event.data)[0].message}`,
+          date: new Date(),
+        },
+      ]);
+      console.log("WS DATA: ", JSON.parse(event.data)[0].message);
+    };
+  }, []);
 
   setTimeout(async () => {
-    const res = await fetch(`/api/getJetracer?type=GETLATEST`);
-    const data = await res.json();
-    const result = `https://${data.ipAddress}:5000/video_feed`;
-    setResult(result);
-    setLoading(false);
+    if (result === "") {
+      const res = await fetch(`/api/getJetracer?type=GETLATEST`);
+      const data = await res.json();
+      const newResult = `https://${data.ipAddress}:5000/video_feed`;
+      setResult(newResult);
+      setLoading(false);
+    }
   }, 2000);
 
   if (key == "LivePreview") {
@@ -89,11 +125,11 @@ const ContentRender = (key) => {
             <Image width="75%" alt="CAMERA STREAM" src={result} />
           )}
           <MessageList
-            style={{ borderStyle: "solid" }}
+            style={{ borderStyle: "solid", maxHeight: "20%" }}
             className="message-list"
             lockable={true}
-            toBottomHeight={"100%"}
-            dataSource={[msg]}
+            toBottomHeight={"10%"}
+            dataSource={wsData}
           />
         </div>
       </>
