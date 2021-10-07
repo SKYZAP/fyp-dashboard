@@ -1,5 +1,5 @@
 import { Layout, Menu, Breadcrumb, Image, Skeleton, Table, Button } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MessageList } from "react-chat-elements";
 require("antd/dist/antd.less");
 require("react-chat-elements/dist/main.css");
@@ -7,6 +7,8 @@ require("react-chat-elements/dist/main.css");
 const { Header, Content, Footer } = Layout;
 
 const isBrowser = typeof window !== "undefined";
+
+const runWebSocket = (ipAddress) => {};
 
 const msg = {
   position: "right",
@@ -67,10 +69,22 @@ const columns = [
 
 const ContentRender = (key) => {
   const [loading, setLoading] = useState(true);
+  const [wsLoading, setWSLoading] = useState(true);
   const [result, setResult] = useState("");
-  const [wsInstance, setWsInstance] = useState(() =>
-    isBrowser ? new WebSocket(`ws://192.168.1.107:5555/`) : null,
-  );
+  const [ipAddress, setIpAddress] = useState("");
+  let client: WebSocket;
+
+  setTimeout(async () => {
+    if (result === "") {
+      const res = await fetch(`/api/getJetracer?type=GETLATEST`);
+      const data = await res.json();
+      const newResult = `https://${data.ipAddress}:5000/video_feed`;
+      setIpAddress(await data.ipAddress);
+      setResult(newResult);
+      setLoading(false);
+    }
+  }, 2000);
+
   const [wsData, setWsData] = useState([
     {
       position: "right",
@@ -79,37 +93,6 @@ const ContentRender = (key) => {
       date: new Date(),
     },
   ]);
-
-  useEffect(() => {
-    const ws = new WebSocket("ws://192.168.1.107:5555/");
-    setWsInstance(ws);
-    wsInstance.onopen = () => {
-      console.log("Connection created");
-    };
-    wsInstance.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      setWsData((wsData) => [
-        ...wsData,
-        {
-          position: "right",
-          type: "text",
-          text: `${JSON.parse(event.data)[0].message}`,
-          date: new Date(),
-        },
-      ]);
-      console.log("WS DATA: ", JSON.parse(event.data)[0].message);
-    };
-  }, []);
-
-  setTimeout(async () => {
-    if (result === "") {
-      const res = await fetch(`/api/getJetracer?type=GETLATEST`);
-      const data = await res.json();
-      const newResult = `https://${data.ipAddress}:5000/video_feed`;
-      setResult(newResult);
-      setLoading(false);
-    }
-  }, 2000);
 
   if (key == "LivePreview") {
     return (
@@ -122,15 +105,46 @@ const ContentRender = (key) => {
           {loading ? (
             <Skeleton.Image style={{ width: "75em", height: "100%" }} />
           ) : (
-            <Image width="75%" alt="CAMERA STREAM" src={result} />
+            <Image width="43%" alt="CAMERA STREAM" src={result} />
           )}
-          <MessageList
-            style={{ borderStyle: "solid", maxHeight: "20%" }}
-            className="message-list"
-            lockable={true}
-            toBottomHeight={"10%"}
-            dataSource={wsData}
-          />
+          <div className="websocket-container" style={{ display: "table-row" }}>
+            {loading ? (
+              <Button className="websocket-button" disabled>
+                CONNECT
+              </Button>
+            ) : (
+              <Button
+                className="websocket-button"
+                onClick={() => {
+                  client = new WebSocket(`ws://172.16.84.20:5555/`);
+                  setTimeout(() => {
+                    client.onmessage = (event) => {
+                      setWsData((wsData) => [
+                        // ...wsData,
+                        {
+                          position: "right",
+                          type: "text",
+                          text: `${JSON.parse(event.data)[0].message}`,
+                          date: new Date(),
+                        },
+                      ]);
+                    };
+                    console.log("DONE MESSAGE");
+                  }, 2000);
+                }}
+              >
+                CONNECT
+              </Button>
+            )}
+
+            <MessageList
+              style={{ borderStyle: "solid", maxHeight: "20%" }}
+              className="message-list"
+              lockable={true}
+              toBottomHeight={"10%"}
+              dataSource={wsData}
+            />
+          </div>
         </div>
       </>
     );
