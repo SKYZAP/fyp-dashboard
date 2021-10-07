@@ -64,3 +64,9 @@ a {
   float: right;
   margin: 16px 0 16px 24px;
 }
+
+.websocket-button {
+  margin: "auto";
+  width: 100%;
+  margin-bottom: 1em;
+}
