@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import dbConn from "../../src/utils";
+import { dbConn } from "../../src/utils";
 
 const dbClient = dbConn();
 
