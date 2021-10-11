@@ -6,10 +6,6 @@ require("react-chat-elements/dist/main.css");
 
 const { Header, Content, Footer } = Layout;
 
-const isBrowser = typeof window !== "undefined";
-
-const runWebSocket = (ipAddress) => {};
-
 const msg = {
   position: "right",
   type: "text",
@@ -69,7 +65,7 @@ const columns = [
 
 const ContentRender = (key) => {
   const [loading, setLoading] = useState(true);
-  const [wsLoading, setWSLoading] = useState(true);
+  const [loadingButtonText, setLoadingButtonText] = useState("CONNECT");
   const [result, setResult] = useState("");
   const [ipAddress, setIpAddress] = useState("");
   let client: WebSocket;
@@ -79,20 +75,16 @@ const ContentRender = (key) => {
       const res = await fetch(`/api/getJetracer?type=GETLATEST`);
       const data = await res.json();
       const newResult = `https://${data.ipAddress}:5000/video_feed`;
-      setIpAddress(await data.ipAddress);
+      setIpAddress(data.ipAddress);
       setResult(newResult);
       setLoading(false);
     }
   }, 2000);
 
-  const [wsData, setWsData] = useState([
-    {
-      position: "right",
-      type: "text",
-      text: `EEE`,
-      date: new Date(),
-    },
-  ]);
+  const [wsData, setWsData] = useState({
+    text: `Initial Message`,
+    date: new Date(),
+  });
 
   if (key == "LivePreview") {
     return (
@@ -107,43 +99,43 @@ const ContentRender = (key) => {
           ) : (
             <Image width="43%" alt="CAMERA STREAM" src={result} />
           )}
-          <div className="websocket-container" style={{ display: "table-row" }}>
+          <div
+            className="websocket-container"
+            style={{ display: "table-row", margin: "auto" }}
+          >
             {loading ? (
               <Button className="websocket-button" disabled>
-                CONNECT
+                {loadingButtonText}
               </Button>
             ) : (
               <Button
                 className="websocket-button"
                 onClick={() => {
                   client = new WebSocket(`ws://172.16.84.20:5555/`);
-                  setTimeout(() => {
-                    client.onmessage = (event) => {
-                      setWsData((wsData) => [
-                        // ...wsData,
-                        {
-                          position: "right",
-                          type: "text",
+                  if (loadingButtonText == "CONNECT") {
+                    setTimeout(() => {
+                      client.onmessage = (event) => {
+                        setWsData({
                           text: `${JSON.parse(event.data)[0].message}`,
                           date: new Date(),
-                        },
-                      ]);
-                    };
-                    console.log("DONE MESSAGE");
-                  }, 2000);
+                        });
+                      };
+                      setLoadingButtonText("DISCONNECT");
+                      console.log(loadingButtonText);
+                    }, 2000);
+                  } else {
+                    client.close(1000);
+                    setWsData({
+                      text: `Initial Message`,
+                      date: new Date(),
+                    });
+                  }
                 }}
               >
-                CONNECT
+                {loadingButtonText}
               </Button>
             )}
-
-            <MessageList
-              style={{ borderStyle: "solid", maxHeight: "20%" }}
-              className="message-list"
-              lockable={true}
-              toBottomHeight={"10%"}
-              dataSource={wsData}
-            />
+            <div className="websocket-display">{wsData.text}</div>
           </div>
         </div>
       </>
