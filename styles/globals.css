@@ -70,3 +70,9 @@ a {
   width: 100%;
   margin-bottom: 1em;
 }
+
+.websocket-display {
+  width: 15em;
+  text-align: center;
+  border: solid 1px black;
+}
