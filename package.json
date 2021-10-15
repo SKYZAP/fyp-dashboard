@@ -13,6 +13,8 @@
     "@fullpage/react-fullpage": "^0.1.19",
     "@google-cloud/local-auth": "^1.0.1",
     "antd": "^4.16.13",
+    "formidable": "^1.2.2",
+    "formidable-serverless": "^1.1.1",
     "googleapis": "^39.2.0",
     "lodash": "^4.17.21",
     "net": "^1.0.2",
