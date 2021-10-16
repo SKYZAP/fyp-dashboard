@@ -1,49 +1,28 @@
 import { Layout, Menu, Breadcrumb, Image, Skeleton, Table, Button } from "antd";
 import { useState } from "react";
+import { render } from "react-dom";
 require("antd/dist/antd.less");
 require("react-chat-elements/dist/main.css");
 
 const { Header, Content, Footer } = Layout;
 
-const msg = {
-  position: "right",
-  type: "text",
-  text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
-  date: new Date(),
+const parseTableData = (media) => {
+  // insert request
+  let result = [{}];
+  for (let i = 0; i < media.length; i++) {
+    result = [
+      ...result,
+      {
+        key: `${i + 1}`,
+        image: media[i].url,
+        date: new Date(media[i].date).toLocaleString(),
+      },
+    ];
+  }
+  result.shift();
+  console.log("RESULT: ", result);
+  return result;
 };
-
-const data = [
-  {
-    key: "1",
-    image:
-      "https://cdn.vox-cdn.com/thumbor/8tLchaDMIEDNzUD3mYQ7v1ZQL84=/0x0:2012x1341/920x613/filters:focal(0x0:2012x1341):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/47070706/google2.0.0.jpg",
-    date: new Date().toLocaleString(),
-  },
-  {
-    key: "2",
-    image:
-      "https://cdn.vox-cdn.com/thumbor/8tLchaDMIEDNzUD3mYQ7v1ZQL84=/0x0:2012x1341/920x613/filters:focal(0x0:2012x1341):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/47070706/google2.0.0.jpg",
-    date: new Date().toLocaleString(),
-  },
-  {
-    key: "3",
-    image:
-      "https://cdn.vox-cdn.com/thumbor/8tLchaDMIEDNzUD3mYQ7v1ZQL84=/0x0:2012x1341/920x613/filters:focal(0x0:2012x1341):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/47070706/google2.0.0.jpg",
-    date: new Date().toLocaleString(),
-  },
-  {
-    key: "4",
-    image:
-      "https://cdn.vox-cdn.com/thumbor/8tLchaDMIEDNzUD3mYQ7v1ZQL84=/0x0:2012x1341/920x613/filters:focal(0x0:2012x1341):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/47070706/google2.0.0.jpg",
-    date: new Date().toLocaleString(),
-  },
-  {
-    key: "5",
-    image:
-      "https://cdn.vox-cdn.com/thumbor/8tLchaDMIEDNzUD3mYQ7v1ZQL84=/0x0:2012x1341/920x613/filters:focal(0x0:2012x1341):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/47070706/google2.0.0.jpg",
-    date: new Date().toLocaleString(),
-  },
-];
 
 const columns = [
   {
@@ -67,14 +46,23 @@ const ContentRender = (key) => {
   const [loadingButtonText, setLoadingButtonText] = useState("CONNECT");
   const [result, setResult] = useState("");
   const [ipAddress, setIpAddress] = useState("");
+  const [tableMedia, setTableMedia] = useState([{}]);
   let client: WebSocket;
 
   setTimeout(async () => {
     if (result === "") {
+      // GET JETRACER DETAILS
       const res = await fetch(`/api/getJetracer?type=GETLATEST`);
       const data = await res.json();
-      const newResult = `https://${data.ipAddress}:5000/video_feed`;
       setIpAddress(data.ipAddress);
+
+      // GET MEDIA TABLE DATA
+      const media = await fetch(`/api/uploadJetracer?type=GETMEDIA`);
+      const mediaData = await media.json();
+      setTableMedia(parseTableData(mediaData));
+
+      // SET JETRACER VIDEO FEED IP & SETS LOADING TO FALSE
+      const newResult = `https://${data.ipAddress}:5000/video_feed`;
       setResult(newResult);
       setLoading(false);
     }
@@ -155,12 +143,21 @@ const ContentRender = (key) => {
               Refresh
             </Button>
           </div>
-          <Table
-            pagination={{ pageSize: 3 }}
-            style={{ maxHeight: "70vh" }}
-            dataSource={data}
-            columns={columns}
-          />
+          {loading ? (
+            <Table
+              pagination={{ pageSize: 3 }}
+              style={{ maxHeight: "70vh" }}
+              loading={true}
+              columns={columns}
+            />
+          ) : (
+            <Table
+              pagination={{ pageSize: 3 }}
+              style={{ maxHeight: "70vh" }}
+              dataSource={tableMedia}
+              columns={columns}
+            />
+          )}
         </div>
       </>
     );
