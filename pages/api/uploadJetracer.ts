@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const formidable = require("formidable-serverless");
-import fs from "fs";
+import { dbConn } from "../../src/utils";
+
+const dbClient = dbConn();
 
 type Data = {
   ip?: string;
@@ -16,19 +17,26 @@ export const config = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const form = new formidable.IncomingForm();
-  form.uploadDir = "./upload";
-  form.keepExtensions = true;
-  form.keepFilename = true;
-  form.parse(req, (err, fields, files) => {
-    console.log(err, fields, files);
-  });
-  form.on("file", function (name, file) {
-    console.log("FF: ", file);
-  });
-  // console.log("FORM: ", form);
-  // console.log("REQ: ", req.readable);
-  res.status(200).json({ file: `${req.body}` });
+  await dbClient.connect();
+
+  const isTypeNull = req.query.type == null ? true : false;
+  const isDateNull = req.query.date == null ? true : false;
+  const isImageURLNull = req.query.url == null ? true : false;
+
+  if (isTypeNull) res.status(400);
+  console.log("TYPE: ", req.query.type);
+  if (req.query.type == "GETMEDIA") {
+    const media = await dbClient.query(`SELECT * from media`);
+    await dbClient.clean();
+    res.status(200).json(media.rows);
+  } else if (req.query.type == "UPLOAD") {
+    if (isDateNull) {
+      res.send({ error: "DATE parameter not given" });
+    }
+    if (isImageURLNull) {
+      res.send({ error: "IMAGE URL parameter not given" });
+    }
+  }
 };
 
 export default handler;
