@@ -19,6 +19,7 @@ export const config = {
 const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   await dbClient.connect();
 
+  let result;
   const isTypeNull = req.query.type == null ? true : false;
   const isDateNull = req.query.date == null ? true : false;
   const isImageURLNull = req.query.url == null ? true : false;
@@ -32,9 +33,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   } else if (req.query.type == "UPLOAD") {
     if (isDateNull) {
       res.send({ error: "DATE parameter not given" });
-    }
-    if (isImageURLNull) {
+    } else if (isImageURLNull) {
       res.send({ error: "IMAGE URL parameter not given" });
+    } else {
+      const newUrl =
+        "https://drive.google.com/uc?export=view&id=" + req.query.url;
+      const jetracer = await dbClient.query(
+        `SELECT * FROM jetracer ORDER BY id DESC LIMIT 1`,
+      );
+      await dbClient.clean();
+      result = await dbClient.query(
+        `INSERT INTO media ("jetracerId","date","url") VALUES ($1,$2,$3)`,
+        [jetracer.rows[0].id, req.query.date, newUrl],
+      );
+      await dbClient.clean();
+      res.status(200).json(result.rows[0]);
     }
   }
 };
