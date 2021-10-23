@@ -98,7 +98,7 @@ const ContentRender = (key) => {
               <Button
                 className="websocket-button"
                 onClick={() => {
-                  client = new WebSocket(`ws://${ipAddress}:5555/`);
+                  client = new WebSocket(`wss://${ipAddress}:5555/`);
                   if (loadingButtonText == "CONNECT") {
                     setTimeout(() => {
                       client.onmessage = (event) => {
