@@ -86,12 +86,25 @@ const HomeScreen = () => {
                 className="imHome"
                 src={jetpic}
                 alt="jetracer picture"
-                width="550em"
-                height="550em"
+                width="500em"
+                height="500em"
               />
-              <h3>Section 1</h3>
+              <h6>
+                1.Connect the RC Car to your local network<br></br>
+                2.Download Jetracer RC Car scripts from
+                <a
+                  style={{ color: "white" }}
+                  href="https://github.com/SKYZAP/jetracer-scripts"
+                >
+                  {" "}
+                  <u>GitHub</u>
+                </a>
+                <br></br>
+                3.Run the script on the Jetracer RC Car<br></br>
+                4.Input the IP address of the car in the next section
+              </h6>
               <Button onClick={() => fullpageApi.moveSectionDown()}>
-                Click me to move down
+                Proceed
               </Button>
             </div>
             <div className="section" style={{ ...defaultStyle }}>
