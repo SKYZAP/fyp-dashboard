@@ -1,6 +1,5 @@
 import { Layout, Menu, Breadcrumb, Image, Skeleton, Table, Button } from "antd";
 import { useState } from "react";
-import { render } from "react-dom";
 require("antd/dist/antd.less");
 require("react-chat-elements/dist/main.css");
 
@@ -98,7 +97,8 @@ const ContentRender = (key) => {
               <Button
                 className="websocket-button"
                 onClick={() => {
-                  client = new WebSocket(`wss://${ipAddress}:5555/`);
+                  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+                  client = new WebSocket(`ws://${ipAddress}:5555/`);
                   if (loadingButtonText == "CONNECT") {
                     setTimeout(() => {
                       client.onmessage = (event) => {
