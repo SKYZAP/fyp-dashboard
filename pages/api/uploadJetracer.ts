@@ -25,7 +25,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const isImageURLNull = req.query.url == null ? true : false;
 
   if (isTypeNull) res.status(400);
-  console.log("TYPE: ", req.query.type);
   if (req.query.type == "GETMEDIA") {
     const media = await dbClient.query(`SELECT * from media`);
     await dbClient.clean();

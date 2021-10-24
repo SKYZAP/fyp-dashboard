@@ -19,7 +19,6 @@ const parseTableData = (media) => {
     ];
   }
   result.shift();
-  console.log("RESULT: ", result);
   return result;
 };
 
@@ -108,7 +107,6 @@ const ContentRender = (key) => {
                         });
                       };
                       setLoadingButtonText("DISCONNECT");
-                      console.log(loadingButtonText);
                     }, 2000);
                   } else {
                     client.close(1000);
@@ -179,7 +177,6 @@ const DashboardScreen = () => {
           <Menu.Item
             key={"LivePreview"}
             onClick={(e) => {
-              console.log(e.key);
               setSelectedMenuItem(e.key);
             }}
           >
@@ -188,7 +185,6 @@ const DashboardScreen = () => {
           <Menu.Item
             key={"Datasets"}
             onClick={(e) => {
-              console.log(e.key);
               setSelectedMenuItem(e.key);
             }}
           >
