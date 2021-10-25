@@ -53,11 +53,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       res.status(200).json(result.rows);
     }
   } else if (req.query.type == "GETLATEST") {
-    result = await dbClient.query(
-      `SELECT * FROM jetracer ORDER BY id DESC LIMIT 1`,
-    );
+    result = await dbClient.query(`SELECT * FROM jetracer`);
     await dbClient.clean();
-    res.status(200).json(result.rows[0]);
+    res.status(200).json(result.rows[result.rows.length - 1]);
   }
 };
 
