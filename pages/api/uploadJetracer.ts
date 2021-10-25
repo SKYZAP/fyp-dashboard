@@ -37,13 +37,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     } else {
       const newUrl =
         "https://drive.google.com/uc?export=view&id=" + req.query.url;
-      const jetracer = await dbClient.query(
-        `SELECT * FROM jetracer ORDER BY id DESC LIMIT 1`,
-      );
+      const jetracer = await dbClient.query(`SELECT * FROM jetracer`);
       await dbClient.clean();
       result = await dbClient.query(
         `INSERT INTO media ("jetracerId","date","url") VALUES ($1,$2,$3)`,
-        [jetracer.rows[0].id, req.query.date, newUrl],
+        [jetracer.rows[jetracer.rows.length - 1].id, req.query.date, newUrl],
       );
       await dbClient.clean();
       res.status(200).json(result.rows[0]);
